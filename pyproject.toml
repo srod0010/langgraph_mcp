@@ -1,0 +1,14 @@
+[project]
+name = "langgraph-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp>=2.10.1",
+    "langchain>=0.3.26",
+    "langchain-litellm>=0.2.1",
+    "langchain-mcp-adapters>=0.1.8",
+    "langgraph>=0.5.1",
+    "python-dotenv>=1.0.0",
+]
