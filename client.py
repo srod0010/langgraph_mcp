@@ -1,14 +1,16 @@
 from typing import List
 from typing_extensions import TypedDict
-from typing import Annotated
+from typing import Annotated, cast
 
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_litellm import ChatLiteLLM
 from langgraph.prebuilt import tools_condition, ToolNode
 from langgraph.graph import StateGraph, START, END
-from langgraph.graph.message import AnyMessage, add_messages
+from langgraph.graph.message import add_messages
+from langchain_core.messages import AnyMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_mcp_adapters.sessions import Connection
 from langchain_mcp_adapters.tools import load_mcp_tools
 
 import asyncio
@@ -39,20 +41,18 @@ client = MultiServerMCPClient(
     }
 )
 """
-client = MultiServerMCPClient(
-    {
-        "first_server": {
-            "command": "python",
-            "args": ["server_one.py"],
-            "transport": "stdio",
-        },
-        "second_server": {
-            "command": "python",
-            "args": ["server_two.py"],
-            "transport": "stdio",
-        }
+client = MultiServerMCPClient(cast(dict[str, Connection], {
+    "first_server": {
+        "command": "python",
+        "args": ["server_one.py"],
+        "transport": "stdio",
+    },
+    "second_server": {
+        "command": "python",
+        "args": ["server_two.py"],
+        "transport": "stdio",
     }
-)
+}))
 
 
 async def create_graph(first_session, second_session):
